@@ -1,2 +1,29 @@
-#MISC
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.eggs/
+
+# Logs
+logs/
+
+# Test / coverage
+.coverage
+coverage.xml
+.pytest_cache/
+htmlcov/
+
+# AWS / SAM
+.aws-sam/
+
+# Misc
+.DS_Store
 CLAUDE.md
