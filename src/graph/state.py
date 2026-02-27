@@ -1,0 +1,18 @@
+import operator
+from typing import Annotated, Optional
+from typing_extensions import TypedDict
+
+
+class ResearchState(TypedDict, total=False):
+    query: str
+    query_id: str
+    max_papers: int
+    routing_decision: str  # "arxiv_only" | "semantic_only" | "both"
+    arxiv_papers: list
+    semantic_papers: list
+    all_papers: list
+    synthesis: str
+    contradictions: list
+    hypotheses: list
+    cost_report: dict
+    errors: Annotated[list, operator.add]
