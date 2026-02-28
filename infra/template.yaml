@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Research Synthesis & Hypothesis Agent
+
+Parameters:
+  OpenAIApiKey:
+    Type: String
+    NoEcho: true
+  AnthropicApiKey:
+    Type: String
+    NoEcho: true
+  PineconeApiKey:
+    Type: String
+    NoEcho: true
+  PineconeIndex:
+    Type: String
+  SupabaseUrl:
+    Type: String
+  SupabaseKey:
+    Type: String
+    NoEcho: true
+  SemanticScholarApiKey:
+    Type: String
+    NoEcho: true
+    Default: ""
+  MaxCostPerQuery:
+    Type: String
+    Default: "0.50"
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Architectures:
+      - arm64
+    Environment:
+      Variables:
+        OPENAI_API_KEY: !Ref OpenAIApiKey
+        ANTHROPIC_API_KEY: !Ref AnthropicApiKey
+        PINECONE_API_KEY: !Ref PineconeApiKey
+        PINECONE_INDEX: !Ref PineconeIndex
+        SUPABASE_URL: !Ref SupabaseUrl
+        SUPABASE_KEY: !Ref SupabaseKey
+        SEMANTIC_SCHOLAR_API_KEY: !Ref SemanticScholarApiKey
+        MAX_COST_PER_QUERY: !Ref MaxCostPerQuery
+
+Resources:
+  ResearchAgentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/research-agent:latest"
+      Role: !GetAtt ResearchAgentRole.Arn
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowMethods:
+          - GET
+          - POST
+        AllowHeaders:
+          - "*"
+
+  ResearchAgentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  FunctionArn:
+    Value: !GetAtt ResearchAgentFunction.Arn

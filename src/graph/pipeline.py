@@ -1,6 +1,7 @@
 from langgraph.graph import END, START, StateGraph
 
 from src.agents.contradiction import contradiction_node
+from src.agents.cost_auditor import cost_auditor_node
 from src.agents.deduplicator import deduplicator_node
 from src.agents.fetchers import arxiv_fetcher, semantic_fetcher
 from src.agents.hypothesis import hypothesis_node
@@ -19,6 +20,7 @@ def build_graph():
     builder.add_node("synthesizer", synthesizer_node)
     builder.add_node("contradiction_detector", contradiction_node)
     builder.add_node("hypothesis_generator", hypothesis_node)
+    builder.add_node("cost_auditor", cost_auditor_node)
 
     builder.add_edge(START, "router")
     # parallel fan-out
@@ -30,7 +32,8 @@ def build_graph():
     builder.add_edge("deduplicator", "synthesizer")
     builder.add_edge("synthesizer", "contradiction_detector")
     builder.add_edge("contradiction_detector", "hypothesis_generator")
-    builder.add_edge("hypothesis_generator", END)
+    builder.add_edge("hypothesis_generator", "cost_auditor")
+    builder.add_edge("cost_auditor", END)
 
     return builder.compile()
 
