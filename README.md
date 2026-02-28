@@ -2,7 +2,7 @@
 
 > A **7-node multi-agent pipeline** that takes a scientific topic, autonomously fetches papers from ArXiv, synthesizes findings, detects contradictions, and generates novel research hypotheses — with per-node cost tracking logged to Supabase.
 
-[![CI](https://github.com/swarat17/research-synthesis-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/research-synthesis-agent/actions/workflows/ci.yml)
+[![CI](https://github.com/swarat17/research-synthesis-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/swarat17/research-synthesis-agent/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -99,7 +99,7 @@ You will need API keys for:
 
 ```bash
 # 1. Clone
-git clone https://github.com/your-username/research-synthesis-agent
+git clone https://github.com/swarat17/research-synthesis-agent
 cd research-synthesis-agent
 
 # 2. Create and activate virtual environment
