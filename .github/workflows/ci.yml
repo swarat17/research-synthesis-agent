@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  # ── Job 1: Lint ────────────────────────────────────────────────────────
+  lint:
+    name: Lint (ruff + black)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install linters
+        run: pip install ruff==0.15.4 black==26.1.0
+
+      - name: ruff check
+        run: ruff check src/ tests/
+
+      - name: black check
+        run: black --check src/ tests/
+
+  # ── Job 2: Unit tests ──────────────────────────────────────────────────
+  unit-tests:
+    name: Unit tests + coverage
+    needs: lint
+    runs-on: ubuntu-latest
+    env:
+      # Dummy values — prevent import-time failures, no real calls made
+      OPENAI_API_KEY: "sk-dummy"
+      ANTHROPIC_API_KEY: "sk-ant-dummy"
+      PINECONE_API_KEY: "dummy"
+      PINECONE_INDEX: "dummy"
+      SUPABASE_URL: "https://dummy.supabase.co"
+      SUPABASE_KEY: "dummy"
+      SEMANTIC_SCHOLAR_API_KEY: "dummy"
+      MAX_COST_PER_QUERY: "0.50"
+      COST_WARNING_THRESHOLD: "0.25"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: pytest tests/unit/ --cov=src --cov-report=xml --cov-fail-under=60
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.xml
+          fail_ci_if_error: false
+
+  # ── Job 3: Integration tests (main branch only) ────────────────────────
+  integration-tests:
+    name: Integration tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+      PINECONE_INDEX: ${{ secrets.PINECONE_INDEX }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+      MAX_COST_PER_QUERY: "0.50"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run integration tests
+        run: pytest tests/integration/ -m integration -v
