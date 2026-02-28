@@ -27,13 +27,13 @@ Submit a research topic and the pipeline:
 
 ```mermaid
 graph LR
-    A([User Query]) --> B[Router\nGPT-4o-mini]
+    A([User Query]) --> B[Router (GPT-4o-mini)]
     B --> C[ArXiv Fetcher]
     C --> D[Deduplicator]
-    D --> E[Synthesizer\nClaude Sonnet 4.6]
-    E --> F[Contradiction Detector\nGPT-4o-mini]
-    F --> G[Hypothesis Generator\nClaude Sonnet 4.6]
-    G --> H[Cost Auditor\nSupabase]
+    D --> E[Synthesizer (Claude Sonnet 4.6)]
+    E --> F[Contradiction Detector (GPT-4o-mini)]
+    F --> G[Hypothesis Generator (Claude Sonnet 4.6)]
+    G --> H[Cost Auditor (Supabase)]
     H --> I([Response])
 ```
 
