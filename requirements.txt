@@ -104,7 +104,6 @@ rich==14.3.3
 rpds-py==0.30.0
 ruff==0.15.4
 s3transfer==0.16.0
-semanticscholar==0.11.0
 sgmllib3k==1.0.0
 six==1.17.0
 smmap==5.0.2

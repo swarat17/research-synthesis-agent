@@ -24,7 +24,4 @@ def test_graph_fetches_papers_for_known_query():
         pass
 
     arxiv_papers = result.get("arxiv_papers", [])
-    semantic_papers = result.get("semantic_papers", [])
-    total = len(arxiv_papers) + len(semantic_papers)
-
-    assert total >= 1, f"Expected at least 1 paper, got 0. Errors: {result.get('errors')}"
+    assert len(arxiv_papers) >= 1, f"Expected at least 1 paper, got 0. Errors: {result.get('errors')}"

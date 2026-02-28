@@ -7,9 +7,8 @@ class ResearchState(TypedDict, total=False):
     query: str
     query_id: str
     max_papers: int
-    routing_decision: str  # "arxiv_only" | "semantic_only" | "both"
+    routing_decision: str
     arxiv_papers: list
-    semantic_papers: list
     all_papers: list
     synthesis: str
     contradictions: list

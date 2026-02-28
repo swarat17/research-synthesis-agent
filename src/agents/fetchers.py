@@ -1,20 +1,11 @@
 import arxiv
-from semanticscholar import SemanticScholar
 
 from src.graph.state import ResearchState
 from src.utils.logger import logger
 
-_REQUIRED_FIELDS = [
-    "title", "abstract", "authors", "year",
-    "citationCount", "url", "externalIds",
-]
-
 
 def arxiv_fetcher(state: ResearchState) -> dict:
-    if state.get("routing_decision") == "semantic_only":
-        return {"arxiv_papers": []}
-
-    limit = max(1, state.get("max_papers", 10) // 2)
+    limit = max(1, state.get("max_papers", 10))
     query = state.get("query", "")
 
     try:
@@ -41,39 +32,3 @@ def arxiv_fetcher(state: ResearchState) -> dict:
     except Exception as e:
         logger.warning(f"[arxiv_fetcher] Error: {e}")
         return {"arxiv_papers": [], "errors": [f"arxiv_fetcher: {str(e)}"]}
-
-
-def semantic_fetcher(state: ResearchState) -> dict:
-    if state.get("routing_decision") == "arxiv_only":
-        return {"semantic_papers": []}
-
-    limit = max(1, state.get("max_papers", 10) // 2)
-    query = state.get("query", "")
-
-    try:
-        sch = SemanticScholar()
-        results = sch.search_paper(query, limit=limit, fields=_REQUIRED_FIELDS)
-        papers = []
-        for paper in results:
-            abstract = paper.abstract or ""
-            if len(abstract) < 50:
-                continue
-            papers.append({
-                "id": paper.paperId or "",
-                "title": paper.title or "",
-                "abstract": abstract,
-                "authors": [a["name"] for a in (paper.authors or [])[:5]],
-                "year": paper.year,
-                "url": (
-                    paper.url
-                    or f"https://www.semanticscholar.org/paper/{paper.paperId}"
-                ),
-                "source": "semantic_scholar",
-                "citation_count": paper.citationCount or 0,
-            })
-        logger.info(f"[semantic_fetcher] fetched {len(papers)} papers")
-        return {"semantic_papers": papers}
-
-    except Exception as e:
-        logger.warning(f"[semantic_fetcher] Error: {e}")
-        return {"semantic_papers": [], "errors": [f"semantic_fetcher: {str(e)}"]}

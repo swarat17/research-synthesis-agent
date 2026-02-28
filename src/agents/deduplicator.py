@@ -13,9 +13,7 @@ def _normalize_title(title: str) -> str:
 
 
 def deduplicator_node(state: ResearchState) -> dict:
-    arxiv = state.get("arxiv_papers") or []
-    semantic = state.get("semantic_papers") or []
-    combined = arxiv + semantic
+    combined = state.get("arxiv_papers") or []
 
     # Filter short abstracts
     papers = [p for p in combined if len(p.get("abstract", "")) >= 50]

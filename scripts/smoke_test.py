@@ -36,13 +36,10 @@ if __name__ == "__main__":
     result = graph.invoke(initial_state)
 
     arxiv_count = len(result.get("arxiv_papers", []))
-    semantic_count = len(result.get("semantic_papers", []))
     errors = result.get("errors", [])
 
     print(f"Routing decision : {result.get('routing_decision')}")
     print(f"ArXiv papers     : {arxiv_count}")
-    print(f"Semantic Scholar : {semantic_count}")
-    print(f"Total papers     : {arxiv_count + semantic_count}")
 
     if errors:
         print(f"\nErrors ({len(errors)}):")

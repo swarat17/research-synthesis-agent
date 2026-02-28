@@ -9,19 +9,14 @@ from src.utils.cost_tracker import cost_tracker
 from src.utils.logger import logger
 
 _SYSTEM = (
-    "You are a research query router. Classify the query and extract keywords. "
+    "You are a research query router. Extract keywords from the query. "
     "Respond only with valid JSON, no markdown."
 )
 
 _USER_TEMPLATE = """Query: {query}
 
 Return exactly this JSON:
-{{"routing": "<decision>", "keywords": ["kw1", "kw2", "kw3"]}}
-
-routing values:
-- "arxiv_only"   : pure math, physics, CS theory, preprints
-- "semantic_only": medicine, clinical, biology, social science
-- "both"         : general ML/NLP, interdisciplinary, or uncertain
+{{"keywords": ["kw1", "kw2", "kw3"]}}
 
 keywords: 3-5 specific technical terms from the query"""
 
@@ -37,11 +32,7 @@ def router_node(state: ResearchState) -> dict:
         latency_ms = (time.time() - t0) * 1000
 
         data = json.loads(response.content)
-        routing = data.get("routing", "both")
         keywords = data.get("keywords", [])
-
-        if routing not in ("arxiv_only", "semantic_only", "both"):
-            routing = "both"
 
         usage = response.usage_metadata or {}
         cost_tracker.track_call(
@@ -56,9 +47,9 @@ def router_node(state: ResearchState) -> dict:
         if keywords:
             enriched = f"{state['query']} {' '.join(keywords)}"
 
-        logger.info(f"[router] routing={routing} keywords={keywords}")
-        return {"routing_decision": routing, "query": enriched}
+        logger.info(f"[router] keywords={keywords}")
+        return {"routing_decision": "arxiv", "query": enriched}
 
     except Exception as e:
-        logger.warning(f"[router] Failed, defaulting to 'both': {e}")
-        return {"routing_decision": "both", "errors": [f"router: {str(e)}"]}
+        logger.warning(f"[router] Failed: {e}")
+        return {"routing_decision": "arxiv", "errors": [f"router: {str(e)}"]}

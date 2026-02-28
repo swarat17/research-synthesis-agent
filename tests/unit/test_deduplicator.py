@@ -16,35 +16,32 @@ def _paper(title, source="arxiv", citation_count=0, year=2023, abstract=None):
     }
 
 
-def _run(arxiv_papers=None, semantic_papers=None):
-    state = {
-        "arxiv_papers": arxiv_papers or [],
-        "semantic_papers": semantic_papers or [],
-    }
+def _run(arxiv_papers=None):
+    state = {"arxiv_papers": arxiv_papers or []}
     return deduplicator_node(state)["all_papers"]
 
 
-def test_deduplicates_same_title_different_source():
-    papers = _run(
-        arxiv_papers=[_paper("Deep Learning Survey", source="arxiv")],
-        semantic_papers=[_paper("Deep Learning Survey", source="semantic_scholar")],
-    )
+def test_deduplicates_same_title_different_id():
+    papers = _run(arxiv_papers=[
+        _paper("Deep Learning Survey"),
+        _paper("Deep Learning Survey"),
+    ])
     assert len(papers) == 1
 
 
 def test_deduplicates_with_punctuation_differences():
-    papers = _run(
-        arxiv_papers=[_paper("BERT: Pre-Training of Deep Bidirectional Transformers")],
-        semantic_papers=[_paper("BERT Pre Training of Deep Bidirectional Transformers")],
-    )
+    papers = _run(arxiv_papers=[
+        _paper("BERT: Pre-Training of Deep Bidirectional Transformers"),
+        _paper("BERT Pre Training of Deep Bidirectional Transformers"),
+    ])
     assert len(papers) == 1
 
 
 def test_keeps_higher_citation_count_on_dedup():
-    papers = _run(
-        arxiv_papers=[_paper("Attention Is All You Need", citation_count=5)],
-        semantic_papers=[_paper("Attention Is All You Need", citation_count=100)],
-    )
+    papers = _run(arxiv_papers=[
+        _paper("Attention Is All You Need", citation_count=5),
+        _paper("Attention Is All You Need", citation_count=100),
+    ])
     assert len(papers) == 1
     assert papers[0]["citation_count"] == 100
 

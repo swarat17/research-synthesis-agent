@@ -1,7 +1,10 @@
 import secrets
 from datetime import datetime, timezone
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
+
+load_dotenv()
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
