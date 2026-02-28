@@ -27,7 +27,7 @@ Submit a research topic and the pipeline:
 
 ```mermaid
 graph LR
-    A([User Query]) --> B[Router (GPT-4o-mini)]
+    A([User Query]) --> B[Router {GPT-4o-mini}]
     B --> C[ArXiv Fetcher]
     C --> D[Deduplicator]
     D --> E[Synthesizer (Claude Sonnet 4.6)]
