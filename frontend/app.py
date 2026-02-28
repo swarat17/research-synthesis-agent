@@ -75,11 +75,7 @@ if page == "🔍 Research Query":
     )
     max_papers = st.slider("Max papers to fetch", min_value=4, max_value=20, value=10, step=2)
 
-    analyze_clicked = st.button(
-        "🔍 Analyze",
-        type="primary",
-        disabled=len(query.strip()) < 10,
-    )
+    analyze_clicked = st.button("🔍 Analyze", type="primary")
 
     if analyze_clicked:
         with st.spinner("Fetching papers, synthesizing, generating hypotheses…"):

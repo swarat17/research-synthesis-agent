@@ -1,4 +1,3 @@
-import os
 import pytest
 
 from src.utils.cost_tracker import CostTracker, CostLimitExceededError

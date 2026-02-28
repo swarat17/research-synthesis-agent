@@ -17,8 +17,11 @@ _SYSTEM = (
 )
 
 
-def _build_prompt(papers: list[dict]) -> str:
-    lines = ["Synthesize the following research papers:\n"]
+def _build_prompt(papers: list[dict], query: str) -> str:
+    lines = [
+        f"The user's research query is: \"{query}\"\n",
+        "Synthesize the following papers with a focus on this specific topic:\n",
+    ]
     for i, p in enumerate(papers[:10], 1):
         authors = p.get("authors", [])
         author_str = ", ".join(authors[:2])
@@ -30,7 +33,8 @@ def _build_prompt(papers: list[dict]) -> str:
             f"   {p.get('abstract', '')[:300]}\n"
         )
     lines.append(
-        "\nWrite a 400-600 word synthesis grouping papers by theme. "
+        "\nWrite a 400-600 word synthesis grouping papers by theme, "
+        "keeping focus on the user's query. "
         "Use inline citations like [Author et al., Year]."
     )
     return "\n".join(lines)
@@ -49,7 +53,8 @@ def synthesizer_node(state: ResearchState) -> dict:
     if not papers:
         return {"synthesis": "", "errors": ["synthesizer: no papers to synthesize"]}
 
-    prompt = _build_prompt(papers)
+    original_query = state.get("original_query") or state.get("query", "")
+    prompt = _build_prompt(papers, original_query)
     llm = ChatAnthropic(model=_MODEL, temperature=0)
 
     t0 = time.time()

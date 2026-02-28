@@ -3,8 +3,6 @@ from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
-
-load_dotenv()
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
@@ -13,6 +11,8 @@ from src.graph.pipeline import graph
 from src.storage.supabase_store import get_recent_queries
 from src.utils.cost_tracker import cost_tracker
 from src.utils.logger import logger
+
+load_dotenv()
 
 app = FastAPI(title="Research Synthesis Agent", version="1.0.0")
 
