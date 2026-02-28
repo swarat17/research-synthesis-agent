@@ -38,6 +38,7 @@ async def analyze(request: QueryRequest):
 
         return QueryResponse(
             query_id=query_id,
+            papers=result.get("all_papers") or [],
             synthesis=result.get("synthesis") or "",
             contradictions=result.get("contradictions") or [],
             hypotheses=result.get("hypotheses") or [],

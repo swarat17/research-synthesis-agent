@@ -10,6 +10,7 @@ class QueryRequest(BaseModel):
 
 class QueryResponse(BaseModel):
     query_id: str
+    papers: list[dict]
     synthesis: str
     contradictions: list[dict]
     hypotheses: list[dict]
