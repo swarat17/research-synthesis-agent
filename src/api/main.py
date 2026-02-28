@@ -34,6 +34,7 @@ async def analyze(request: QueryRequest):
 
         result = graph.invoke({
             "query": request.query,
+            "original_query": request.query,
             "query_id": query_id,
             "max_papers": request.max_papers,
             "errors": [],

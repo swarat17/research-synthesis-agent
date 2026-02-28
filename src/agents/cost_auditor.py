@@ -21,7 +21,7 @@ def cost_auditor_node(state: ResearchState) -> dict:
     try:
         log_query(
             query_id=state.get("query_id", "unknown"),
-            query=state.get("query", ""),
+            query=state.get("original_query") or state.get("query", ""),
             cost_report=report,
             num_papers=len(state.get("all_papers") or []),
             num_contradictions=len(state.get("contradictions") or []),

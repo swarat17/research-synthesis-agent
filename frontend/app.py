@@ -3,7 +3,6 @@ import os
 import httpx
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 
 from helpers import (
     format_confidence,
@@ -24,7 +23,7 @@ st.set_page_config(
 st.sidebar.title("🔬 Research Agent")
 page = st.sidebar.radio(
     "Navigate",
-    ["🔍 Research Query", "📊 Cost Dashboard", "🏗️ Architecture"],
+    ["🔍 Research Query", "📊 Cost Dashboard"],
 )
 
 
@@ -249,59 +248,3 @@ elif page == "📊 Cost Dashboard":
     st.dataframe(df[display_cols], use_container_width=True, hide_index=True)
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# PAGE 3 — Architecture
-# ══════════════════════════════════════════════════════════════════════════
-else:
-    st.title("🏗️ Architecture")
-
-    st.subheader("8-Node LangGraph Pipeline")
-    mermaid_diagram = """
-graph TD
-    A([User Query]) --> B[1. Router<br/>GPT-4o-mini]
-    B --> C[2. ArXiv Fetcher]
-    B --> D[3. Semantic Scholar Fetcher]
-    C --> E[4. Deduplicator]
-    D --> E
-    E --> F[5. Synthesizer<br/>Claude Sonnet 4.6]
-    F --> G[6. Contradiction Detector<br/>GPT-4o-mini]
-    G --> H[7. Hypothesis Generator<br/>Claude Sonnet 4.6]
-    H --> I[8. Cost Auditor → Supabase]
-    I --> J([Response])
-"""
-    components.html(
-        f"""
-        <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-        <script>mermaid.initialize({{ startOnLoad: true, theme: 'default' }});</script>
-        <div class="mermaid">{mermaid_diagram}</div>
-        """,
-        height=420,
-    )
-
-    st.subheader("Tech Stack")
-    st.table(pd.DataFrame({
-        "Layer": [
-            "Orchestration", "Cheap routing/detection", "Deep generation",
-            "Vector storage", "Persistence", "API layer",
-            "Serverless hosting", "Frontend",
-        ],
-        "Technology": [
-            "LangGraph 1.x", "GPT-4o-mini", "Claude Sonnet 4.6",
-            "Pinecone", "Supabase (PostgreSQL)", "FastAPI + Mangum",
-            "AWS Lambda + API Gateway", "Streamlit",
-        ],
-    }))
-
-    st.subheader("LLM Routing Rationale")
-    st.markdown("""
-| Task | Model | Why |
-|---|---|---|
-| Query routing + keyword extraction | GPT-4o-mini | Simple classification; ~$0.0001/call |
-| Contradiction detection | GPT-4o-mini | Structured JSON output; cheap |
-| Synthesis (400-600 words) | Claude Sonnet 4.6 | Best long-form coherence |
-| Hypothesis generation | Claude Sonnet 4.6 | Creative, nuanced reasoning |
-| Embeddings | text-embedding-3-small | Fast, cheap, 1536-dim |
-""")
-
-    st.markdown("---")
-    st.markdown("📂 [GitHub Repository](https://github.com) · Built with Claude Code")

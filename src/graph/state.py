@@ -5,6 +5,7 @@ from typing_extensions import TypedDict
 
 class ResearchState(TypedDict, total=False):
     query: str
+    original_query: str
     query_id: str
     max_papers: int
     routing_decision: str
