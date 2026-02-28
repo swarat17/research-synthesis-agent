@@ -6,8 +6,10 @@ from src.utils.logger import logger
 
 def _normalize_title(title: str) -> str:
     title = title.lower()
-    title = re.sub(r"[-_]", " ", title)      # hyphens/underscores → spaces (so Pre-Training == Pre Training)
-    title = re.sub(r"[^\w\s]", "", title)    # strip remaining punctuation
+    title = re.sub(
+        r"[-_]", " ", title
+    )  # hyphens/underscores → spaces (so Pre-Training == Pre Training)
+    title = re.sub(r"[^\w\s]", "", title)  # strip remaining punctuation
     title = re.sub(r"\s+", " ", title).strip()
     return title
 
@@ -24,7 +26,9 @@ def deduplicator_node(state: ResearchState) -> dict:
         key = _normalize_title(paper.get("title", ""))
         if key not in seen:
             seen[key] = paper
-        elif (paper.get("citation_count") or 0) > (seen[key].get("citation_count") or 0):
+        elif (paper.get("citation_count") or 0) > (
+            seen[key].get("citation_count") or 0
+        ):
             seen[key] = paper
 
     deduped = list(seen.values())

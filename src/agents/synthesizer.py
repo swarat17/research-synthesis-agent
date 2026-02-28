@@ -19,7 +19,7 @@ _SYSTEM = (
 
 def _build_prompt(papers: list[dict], query: str) -> str:
     lines = [
-        f"The user's research query is: \"{query}\"\n",
+        f'The user\'s research query is: "{query}"\n',
         "Synthesize the following papers with a focus on this specific topic:\n",
     ]
     for i, p in enumerate(papers[:10], 1):
@@ -59,10 +59,12 @@ def synthesizer_node(state: ResearchState) -> dict:
 
     t0 = time.time()
     try:
-        response = llm.invoke([
-            SystemMessage(content=_SYSTEM),
-            HumanMessage(content=prompt),
-        ])
+        response = llm.invoke(
+            [
+                SystemMessage(content=_SYSTEM),
+                HumanMessage(content=prompt),
+            ]
+        )
         latency_ms = (time.time() - t0) * 1000
 
         usage = response.usage_metadata or {}

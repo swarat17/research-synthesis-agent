@@ -37,10 +37,12 @@ def contradiction_node(state: ResearchState) -> dict:
 
     t0 = time.time()
     try:
-        response = llm.invoke([
-            SystemMessage(content=_SYSTEM),
-            HumanMessage(content=prompt),
-        ])
+        response = llm.invoke(
+            [
+                SystemMessage(content=_SYSTEM),
+                HumanMessage(content=prompt),
+            ]
+        )
         latency_ms = (time.time() - t0) * 1000
 
         usage = response.usage_metadata or {}
@@ -59,12 +61,17 @@ def contradiction_node(state: ResearchState) -> dict:
             if c.get("severity") not in _VALID_SEVERITIES:
                 c["severity"] = "low"
 
-        logger.info(f"[contradiction_detector] Found {len(contradictions)} contradictions")
+        logger.info(
+            f"[contradiction_detector] Found {len(contradictions)} contradictions"
+        )
         return {"contradictions": contradictions}
 
     except json.JSONDecodeError as e:
         logger.warning(f"[contradiction_detector] JSON parse failed: {e}")
-        return {"contradictions": [], "errors": [f"contradiction_detector: JSON parse failed: {e}"]}
+        return {
+            "contradictions": [],
+            "errors": [f"contradiction_detector: JSON parse failed: {e}"],
+        }
     except Exception as e:
         logger.error(f"[contradiction_detector] Failed: {e}")
         return {"contradictions": [], "errors": [f"contradiction_detector: {e}"]}

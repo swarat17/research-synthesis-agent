@@ -32,13 +32,15 @@ async def analyze(request: QueryRequest):
     try:
         cost_tracker.start_query(query_id)
 
-        result = graph.invoke({
-            "query": request.query,
-            "original_query": request.query,
-            "query_id": query_id,
-            "max_papers": request.max_papers,
-            "errors": [],
-        })
+        result = graph.invoke(
+            {
+                "query": request.query,
+                "original_query": request.query,
+                "query_id": query_id,
+                "max_papers": request.max_papers,
+                "errors": [],
+            }
+        )
 
         return QueryResponse(
             query_id=query_id,

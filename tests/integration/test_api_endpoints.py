@@ -35,10 +35,13 @@ def test_stats_returns_200_on_supabase_failure():
 @pytest.mark.integration
 def test_analyze_returns_full_response():
     """Real call — needs OPENAI_API_KEY, ANTHROPIC_API_KEY, PINECONE_API_KEY, SUPABASE_URL/KEY."""
-    response = client.post("/analyze", json={
-        "query": "transformer attention mechanisms in NLP",
-        "max_papers": 4,
-    })
+    response = client.post(
+        "/analyze",
+        json={
+            "query": "transformer attention mechanisms in NLP",
+            "max_papers": 4,
+        },
+    )
     assert response.status_code == 200
     data = response.json()
     assert "query_id" in data

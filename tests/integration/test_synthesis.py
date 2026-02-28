@@ -52,4 +52,6 @@ def test_synthesis_contains_citation_bracket():
 
     synthesis = result.get("synthesis", "")
     assert len(synthesis) > 100, "Synthesis should not be empty"
-    assert "[" in synthesis, "Synthesis should contain inline citations like [Author et al., Year]"
+    assert (
+        "[" in synthesis
+    ), "Synthesis should contain inline citations like [Author et al., Year]"

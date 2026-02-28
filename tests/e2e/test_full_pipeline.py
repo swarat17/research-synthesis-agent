@@ -3,6 +3,7 @@ End-to-end test against a live Lambda deployment.
 Requires env var: E2E_API_URL=https://<id>.execute-api.<region>.amazonaws.com
 All API keys must also be set in the Lambda environment.
 """
+
 import os
 import time
 
@@ -20,7 +21,10 @@ def test_full_pipeline():
     with httpx.Client(timeout=90.0) as client:
         resp = client.post(
             f"{E2E_API_URL}/analyze",
-            json={"query": "deep learning image segmentation neural networks", "max_papers": 6},
+            json={
+                "query": "deep learning image segmentation neural networks",
+                "max_papers": 6,
+            },
         )
 
     elapsed = time.time() - t0
@@ -39,7 +43,8 @@ def test_full_pipeline():
 
     # Verify Supabase record was written
     from src.storage.supabase_store import get_recent_queries
+
     rows = get_recent_queries(10)
-    assert any(r.get("query_id") == query_id for r in rows), (
-        f"query_id {query_id!r} not found in Supabase logs"
-    )
+    assert any(
+        r.get("query_id") == query_id for r in rows
+    ), f"query_id {query_id!r} not found in Supabase logs"

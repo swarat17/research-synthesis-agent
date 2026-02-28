@@ -10,12 +10,14 @@ def test_full_pipeline_produces_synthesis_and_hypotheses():
     query_id = "integration-phase4-001"
     cost_tracker.start_query(query_id)
 
-    result = graph.invoke({
-        "query": "deep learning image segmentation",
-        "query_id": query_id,
-        "max_papers": 6,
-        "errors": [],
-    })
+    result = graph.invoke(
+        {
+            "query": "deep learning image segmentation",
+            "query_id": query_id,
+            "max_papers": 6,
+            "errors": [],
+        }
+    )
 
     try:
         cost_tracker.finish_query()
@@ -23,6 +25,6 @@ def test_full_pipeline_produces_synthesis_and_hypotheses():
         pass
 
     assert result.get("synthesis"), f"Synthesis empty. Errors: {result.get('errors')}"
-    assert len(result.get("hypotheses", [])) >= 1, (
-        f"Expected ≥1 hypothesis. Errors: {result.get('errors')}"
-    )
+    assert (
+        len(result.get("hypotheses", [])) >= 1
+    ), f"Expected ≥1 hypothesis. Errors: {result.get('errors')}"

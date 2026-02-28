@@ -21,17 +21,19 @@ def log_query(
     num_contradictions: int,
     num_hypotheses: int,
 ) -> None:
-    _client().table("query_logs").insert({
-        "query_id": query_id,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "query": query[:500],
-        "total_cost_usd": cost_report.get("total_cost_usd", 0.0),
-        "total_latency_ms": cost_report.get("total_latency_ms", 0.0),
-        "num_papers": num_papers,
-        "num_contradictions": num_contradictions,
-        "num_hypotheses": num_hypotheses,
-        "node_breakdown": cost_report.get("breakdown", []),
-    }).execute()
+    _client().table("query_logs").insert(
+        {
+            "query_id": query_id,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "query": query[:500],
+            "total_cost_usd": cost_report.get("total_cost_usd", 0.0),
+            "total_latency_ms": cost_report.get("total_latency_ms", 0.0),
+            "num_papers": num_papers,
+            "num_contradictions": num_contradictions,
+            "num_hypotheses": num_hypotheses,
+            "node_breakdown": cost_report.get("breakdown", []),
+        }
+    ).execute()
     logger.info(f"[supabase_store] Logged query {query_id}")
 
 

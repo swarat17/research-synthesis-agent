@@ -52,10 +52,12 @@ def hypothesis_node(state: ResearchState) -> dict:
 
     t0 = time.time()
     try:
-        response = llm.invoke([
-            SystemMessage(content=_SYSTEM),
-            HumanMessage(content=prompt),
-        ])
+        response = llm.invoke(
+            [
+                SystemMessage(content=_SYSTEM),
+                HumanMessage(content=prompt),
+            ]
+        )
         latency_ms = (time.time() - t0) * 1000
 
         usage = response.usage_metadata or {}
@@ -80,7 +82,10 @@ def hypothesis_node(state: ResearchState) -> dict:
 
     except json.JSONDecodeError as e:
         logger.warning(f"[hypothesis_generator] JSON parse failed: {e}")
-        return {"hypotheses": [], "errors": [f"hypothesis_generator: JSON parse failed: {e}"]}
+        return {
+            "hypotheses": [],
+            "errors": [f"hypothesis_generator: JSON parse failed: {e}"],
+        }
     except Exception as e:
         logger.error(f"[hypothesis_generator] Failed: {e}")
         return {"hypotheses": [], "errors": [f"hypothesis_generator: {e}"]}

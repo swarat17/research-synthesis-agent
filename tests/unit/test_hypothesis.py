@@ -5,8 +5,8 @@ import pytest
 
 from src.agents.hypothesis import hypothesis_node
 
-
 # ── helpers ────────────────────────────────────────────────────────────────
+
 
 def _mock_response(content: str):
     resp = MagicMock()
@@ -42,6 +42,7 @@ def _state(synthesis="Research synthesis text.", contradictions=None):
 
 # ── tests ───────────────────────────────────────────────────────────────────
 
+
 def test_generates_three_hypotheses():
     with patch("src.agents.hypothesis.ChatAnthropic") as mock_cls:
         mock_cls.return_value.invoke.return_value = _mock_response(_hypotheses_json(3))
@@ -51,7 +52,9 @@ def test_generates_three_hypotheses():
 
 def test_confidence_is_float_in_range():
     with patch("src.agents.hypothesis.ChatAnthropic") as mock_cls:
-        mock_cls.return_value.invoke.return_value = _mock_response(_hypotheses_json(3, confidence=0.75))
+        mock_cls.return_value.invoke.return_value = _mock_response(
+            _hypotheses_json(3, confidence=0.75)
+        )
         result = hypothesis_node(_state())
     for h in result["hypotheses"]:
         assert isinstance(h["confidence"], float)
@@ -88,14 +91,20 @@ def test_handles_parse_failure_gracefully():
 
 
 def test_novelty_values_are_constrained():
-    content = json.dumps({"hypotheses": [{
-        "hypothesis": "Test",
-        "rationale": "Test rationale",
-        "confidence": 0.8,
-        "novelty": "EXTREME",          # invalid
-        "suggested_method": "Method",
-        "supporting_papers": [],
-    }]})
+    content = json.dumps(
+        {
+            "hypotheses": [
+                {
+                    "hypothesis": "Test",
+                    "rationale": "Test rationale",
+                    "confidence": 0.8,
+                    "novelty": "EXTREME",  # invalid
+                    "suggested_method": "Method",
+                    "supporting_papers": [],
+                }
+            ]
+        }
+    )
     with patch("src.agents.hypothesis.ChatAnthropic") as mock_cls:
         mock_cls.return_value.invoke.return_value = _mock_response(content)
         result = hypothesis_node(_state())

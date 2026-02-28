@@ -5,13 +5,20 @@ import pytest
 
 from src.agents.contradiction import contradiction_node
 
-
 # ── helpers ────────────────────────────────────────────────────────────────
+
 
 def _papers(n):
     return [
-        {"id": f"p{i}", "title": f"Paper {i}", "abstract": "A" * 100,
-         "authors": ["Author"], "year": 2023, "source": "arxiv", "citation_count": 0}
+        {
+            "id": f"p{i}",
+            "title": f"Paper {i}",
+            "abstract": "A" * 100,
+            "authors": ["Author"],
+            "year": 2023,
+            "source": "arxiv",
+            "citation_count": 0,
+        }
         for i in range(n)
     ]
 
@@ -40,6 +47,7 @@ def mock_cost():
 
 
 # ── tests ───────────────────────────────────────────────────────────────────
+
 
 def test_returns_empty_for_fewer_than_two_papers():
     with patch("src.agents.contradiction.ChatOpenAI") as mock_cls:

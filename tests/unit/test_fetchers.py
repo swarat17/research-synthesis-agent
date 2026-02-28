@@ -3,7 +3,16 @@ from unittest.mock import MagicMock, patch
 
 from src.agents.fetchers import arxiv_fetcher
 
-REQUIRED_PAPER_FIELDS = {"id", "title", "abstract", "authors", "year", "url", "source", "citation_count"}
+REQUIRED_PAPER_FIELDS = {
+    "id",
+    "title",
+    "abstract",
+    "authors",
+    "year",
+    "url",
+    "source",
+    "citation_count",
+}
 
 
 def _mock_arxiv_result(title="Test Paper", abstract=None):
@@ -21,7 +30,11 @@ def _mock_arxiv_result(title="Test Paper", abstract=None):
 
 
 def _base_state(max_papers=4):
-    return {"routing_decision": "arxiv", "max_papers": max_papers, "query": "test query"}
+    return {
+        "routing_decision": "arxiv",
+        "max_papers": max_papers,
+        "query": "test query",
+    }
 
 
 def test_normalized_paper_has_all_required_fields():

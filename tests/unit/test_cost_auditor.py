@@ -22,7 +22,9 @@ _STATE = {
 
 @pytest.fixture(autouse=True)
 def mock_finish_query():
-    with patch("src.agents.cost_auditor.cost_tracker.finish_query", return_value=_REPORT):
+    with patch(
+        "src.agents.cost_auditor.cost_tracker.finish_query", return_value=_REPORT
+    ):
         yield
 
 
@@ -37,7 +39,9 @@ def test_cost_report_populated_in_state():
 
 
 def test_supabase_failure_does_not_propagate():
-    with patch("src.agents.cost_auditor.log_query", side_effect=Exception("Supabase down")):
+    with patch(
+        "src.agents.cost_auditor.log_query", side_effect=Exception("Supabase down")
+    ):
         # must not raise
         result = cost_auditor_node(_STATE)
 

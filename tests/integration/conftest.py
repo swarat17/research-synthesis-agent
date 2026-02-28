@@ -3,6 +3,7 @@ Integration test configuration:
 - Loads .env so real API keys are available
 - Resets CostTracker singleton between tests to prevent state leakage
 """
+
 import pytest
 from dotenv import load_dotenv
 

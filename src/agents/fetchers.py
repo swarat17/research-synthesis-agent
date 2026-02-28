@@ -16,16 +16,18 @@ def arxiv_fetcher(state: ResearchState) -> dict:
             abstract = result.summary or ""
             if len(abstract) < 50:
                 continue
-            papers.append({
-                "id": result.entry_id,
-                "title": result.title,
-                "abstract": abstract,
-                "authors": [str(a) for a in result.authors[:5]],
-                "year": result.published.year if result.published else None,
-                "url": result.entry_id,
-                "source": "arxiv",
-                "citation_count": 0,
-            })
+            papers.append(
+                {
+                    "id": result.entry_id,
+                    "title": result.title,
+                    "abstract": abstract,
+                    "authors": [str(a) for a in result.authors[:5]],
+                    "year": result.published.year if result.published else None,
+                    "url": result.entry_id,
+                    "source": "arxiv",
+                    "citation_count": 0,
+                }
+            )
         logger.info(f"[arxiv_fetcher] fetched {len(papers)} papers")
         return {"arxiv_papers": papers}
 

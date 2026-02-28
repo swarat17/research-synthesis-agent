@@ -42,11 +42,15 @@ def test_upsert_count_matches_input():
     papers = _make_papers(3)
     mock_index = MagicMock()
 
-    with patch("src.storage.pinecone_store.OpenAI") as mock_openai_cls, \
-         patch("src.storage.pinecone_store._get_index", return_value=mock_index):
-        mock_openai_cls.return_value.embeddings.create.return_value = _mock_embed_response(3)
+    with patch("src.storage.pinecone_store.OpenAI") as mock_openai_cls, patch(
+        "src.storage.pinecone_store._get_index", return_value=mock_index
+    ):
+        mock_openai_cls.return_value.embeddings.create.return_value = (
+            _mock_embed_response(3)
+        )
 
         from src.storage.pinecone_store import embed_and_upsert
+
         count = embed_and_upsert(papers, "qid-001")
 
     assert count == 3
@@ -59,11 +63,15 @@ def test_vector_metadata_has_required_fields():
     papers = _make_papers(1)
     mock_index = MagicMock()
 
-    with patch("src.storage.pinecone_store.OpenAI") as mock_openai_cls, \
-         patch("src.storage.pinecone_store._get_index", return_value=mock_index):
-        mock_openai_cls.return_value.embeddings.create.return_value = _mock_embed_response(1)
+    with patch("src.storage.pinecone_store.OpenAI") as mock_openai_cls, patch(
+        "src.storage.pinecone_store._get_index", return_value=mock_index
+    ):
+        mock_openai_cls.return_value.embeddings.create.return_value = (
+            _mock_embed_response(1)
+        )
 
         from src.storage.pinecone_store import embed_and_upsert
+
         embed_and_upsert(papers, "qid-002")
 
     vectors = mock_index.upsert.call_args.kwargs["vectors"]
@@ -77,11 +85,15 @@ def test_namespace_uses_query_id():
     mock_index = MagicMock()
     query_id = "my-namespace-123"
 
-    with patch("src.storage.pinecone_store.OpenAI") as mock_openai_cls, \
-         patch("src.storage.pinecone_store._get_index", return_value=mock_index):
-        mock_openai_cls.return_value.embeddings.create.return_value = _mock_embed_response(2)
+    with patch("src.storage.pinecone_store.OpenAI") as mock_openai_cls, patch(
+        "src.storage.pinecone_store._get_index", return_value=mock_index
+    ):
+        mock_openai_cls.return_value.embeddings.create.return_value = (
+            _mock_embed_response(2)
+        )
 
         from src.storage.pinecone_store import embed_and_upsert
+
         embed_and_upsert(papers, query_id)
 
     assert mock_index.upsert.call_args.kwargs["namespace"] == query_id

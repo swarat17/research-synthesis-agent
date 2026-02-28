@@ -62,7 +62,9 @@ def embed_and_upsert(papers: list[dict], query_id: str) -> int:
     index = _get_index()
     index.upsert(vectors=vectors, namespace=query_id)
 
-    logger.info(f"[pinecone_store] Upserted {len(vectors)} vectors (namespace={query_id})")
+    logger.info(
+        f"[pinecone_store] Upserted {len(vectors)} vectors (namespace={query_id})"
+    )
     return len(vectors)
 
 

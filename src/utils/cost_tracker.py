@@ -69,7 +69,9 @@ class CostTracker:
             raise RuntimeError("No active query. Call start_query() first.")
 
         pricing = _get_model_pricing(model)
-        cost = (input_tokens * pricing["input"] + output_tokens * pricing["output"]) / 1_000_000
+        cost = (
+            input_tokens * pricing["input"] + output_tokens * pricing["output"]
+        ) / 1_000_000
 
         self._report.total_cost_usd += cost
         self._report.total_latency_ms += latency_ms
@@ -98,7 +100,9 @@ class CostTracker:
             )
 
         warning_threshold = os.getenv("COST_WARNING_THRESHOLD")
-        if warning_threshold is not None and self._report.total_cost_usd > float(warning_threshold):
+        if warning_threshold is not None and self._report.total_cost_usd > float(
+            warning_threshold
+        ):
             logger.warning(
                 f"[CostTracker] Warning threshold ${warning_threshold} exceeded: "
                 f"${self._report.total_cost_usd:.6f}"

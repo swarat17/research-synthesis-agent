@@ -25,10 +25,12 @@ def router_node(state: ResearchState) -> dict:
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     t0 = time.time()
     try:
-        response = llm.invoke([
-            SystemMessage(content=_SYSTEM),
-            HumanMessage(content=_USER_TEMPLATE.format(query=state["query"])),
-        ])
+        response = llm.invoke(
+            [
+                SystemMessage(content=_SYSTEM),
+                HumanMessage(content=_USER_TEMPLATE.format(query=state["query"])),
+            ]
+        )
         latency_ms = (time.time() - t0) * 1000
 
         data = json.loads(response.content)
