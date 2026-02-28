@@ -30,10 +30,10 @@ graph LR
     A([User Query]) --> B[Router {GPT-4o-mini}]
     B --> C[ArXiv Fetcher]
     C --> D[Deduplicator]
-    D --> E[Synthesizer (Claude Sonnet 4.6)]
-    E --> F[Contradiction Detector (GPT-4o-mini)]
-    F --> G[Hypothesis Generator (Claude Sonnet 4.6)]
-    G --> H[Cost Auditor (Supabase)]
+    D --> E[Synthesizer {Claude Sonnet 4.6}]
+    E --> F[Contradiction Detector {GPT-4o-mini}]
+    F --> G[Hypothesis Generator {Claude Sonnet 4.6}]
+    G --> H[Cost Auditor {Supabase}]
     H --> I([Response])
 ```
 
